@@ -22,7 +22,7 @@ Lupita, an undergrad student of kiit, is tired of using whatsapp and scrolling t
 
 * Asymmetric Cryptography( public key and private key encryption)
 * Discord Threads as backend (in version 2)
-* Normal rust +sqlite backend (in version 1)
+* Normal Golang +sqlite backend (in version 1)
 * Redis
 * Cloudflare Workers for hosting the frontend.
 
