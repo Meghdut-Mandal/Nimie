@@ -3,7 +3,6 @@ package utils
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/gorilla/mux"
 	"io/ioutil"
 	"math"
 	"net/http"
@@ -16,12 +15,6 @@ func ParseBody(r *http.Request, x interface{}) {
 			return
 		}
 	}
-}
-
-// GetConversationId get conversation id from request
-func GetConversationId(r *http.Request) int64 {
-	vars := mux.Vars(r)
-	return ParseInt64(vars["conversation_id"])
 }
 
 // ParseInt64 Convert string to int64

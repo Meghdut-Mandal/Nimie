@@ -3,6 +3,7 @@ package controllers
 import (
 	"Nimie_alpha/models"
 	"Nimie_alpha/utils"
+	"github.com/gorilla/mux"
 	"github.com/gorilla/websocket"
 	"log"
 	"net/http"
@@ -18,9 +19,15 @@ var upgrader = websocket.Upgrader{
 	},
 }
 
+// GetIds  get conversation and user ids from request
+func GetIds(r *http.Request) (int64, int64) {
+	vars := mux.Vars(r)
+	return utils.ParseInt64(vars["conversation_id"]), utils.ParseInt64(vars["user_id"])
+}
+
 func HandleChatConnections(w http.ResponseWriter, r *http.Request) {
 	// Upgrade initial GET request to a websocket
-	conversationId := utils.GetConversationId(r)
+	conversationId, userId := GetIds(r)
 	// add the connection to the map
 	ws, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
@@ -41,6 +48,7 @@ func HandleChatConnections(w http.ResponseWriter, r *http.Request) {
 		// Read in a new message as JSON and map it to a ChatMessage object
 		err := ws.ReadJSON(&msg)
 		msg.ConversationId = conversationId
+		msg.UserId = userId
 		models.AddMessage(&msg)
 		// print the message to the console
 		if err != nil {
@@ -48,7 +56,7 @@ func HandleChatConnections(w http.ResponseWriter, r *http.Request) {
 			deleteClient(clients[conversationId], ws)
 			break
 		}
-		println("message sent by ", msg.UserId)
+		//println("message sent by ", msg.UserId)
 		// Send the newly received message to the broadcast channel
 		broadcast <- msg
 	}
@@ -59,7 +67,7 @@ func HandleMessages() {
 		// Grab the next message from the broadcast channel
 		msg := <-broadcast
 
-		println("Broadcast message ", msg.Message)
+		//println("Broadcast message ", msg.Message)
 		// Send it out to every client that is currently connected
 		// Get the clint list having the same Conversation id
 		clientList := clients[msg.ConversationId]
