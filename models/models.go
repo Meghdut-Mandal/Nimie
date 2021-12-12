@@ -20,9 +20,9 @@ type User struct {
 	PublicKey  string `json:"public_key"`
 }
 
-type Message struct {
+type ChatMessage struct {
 	MessageId      int64  `json:"message_id" gorm:"primaryKey;autoIncrement;notNull"`
-	ConversationId string `json:"conversation_id"`
+	ConversationId int64  `json:"conversation_id"`
 	CreateTime     int64  `json:"create_time" gorm:"autoCreateTime"`
 	UserId         int64  `json:"user_id"`
 	Message        string `json:"message"`
@@ -40,8 +40,8 @@ var db *gorm.DB
 
 func init() {
 	config.Connect()
-	db = config.GetDB()
-	db.AutoMigrate(&Conversation{}, &User{}, &Message{}, &Status{})
+	db = config.GetSqlDB()
+	db.AutoMigrate(&Conversation{}, &User{}, &ChatMessage{}, &Status{})
 }
 
 // AddConversation Add conversion to database
@@ -74,4 +74,9 @@ func AddStatus(text *string, userId int64) *Status {
 	}
 	db.Create(status)
 	return status
+}
+
+// AddMessage Add messages to db
+func AddMessage(message *ChatMessage) {
+	db.Create(message)
 }

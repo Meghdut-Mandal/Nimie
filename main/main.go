@@ -3,8 +3,10 @@ package main
 import (
 	"Nimie_alpha/controllers"
 	"github.com/gorilla/mux"
+	"github.com/joho/godotenv"
 	"log"
 	"net/http"
+	"os"
 )
 
 func loggingMiddleware(next http.Handler) http.Handler {
@@ -19,12 +21,20 @@ func loggingMiddleware(next http.Handler) http.Handler {
 var RegisterUserRoutes = func(router *mux.Router) {
 	router.HandleFunc("/user/register", controllers.RegisterUser).Methods("POST")
 	router.HandleFunc("/status/create", controllers.CreateStatus).Methods("POST")
+	router.HandleFunc("/conversation/{conversation_id:[0-9]+}", controllers.HandleChatConnections)
+
 }
 
 func main() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+	port := os.Getenv("PORT")
 	r := mux.NewRouter()
 	RegisterUserRoutes(r)
 	r.Use(loggingMiddleware)
 	http.Handle("/", r)
-	log.Fatal(http.ListenAndServe("localhost:8080", r))
+	go controllers.HandleMessages()
+	log.Fatal(http.ListenAndServe("localhost:"+port, r))
 }

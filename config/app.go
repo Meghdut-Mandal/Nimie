@@ -7,6 +7,7 @@ import (
 
 var (
 	db *gorm.DB
+	//rdb *redis.Client
 )
 
 func Connect() {
@@ -17,6 +18,6 @@ func Connect() {
 	db = d
 }
 
-func GetDB() *gorm.DB {
+func GetSqlDB() *gorm.DB {
 	return db
 }

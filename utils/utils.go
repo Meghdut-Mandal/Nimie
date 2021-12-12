@@ -2,6 +2,8 @@ package utils
 
 import (
 	"encoding/json"
+	"fmt"
+	"github.com/gorilla/mux"
 	"io/ioutil"
 	"math"
 	"net/http"
@@ -16,14 +18,30 @@ func ParseBody(r *http.Request, x interface{}) {
 	}
 }
 
-// get user id from request
+// GetConversationId get conversation id from request
+func GetConversationId(r *http.Request) int64 {
+	vars := mux.Vars(r)
+	return ParseInt64(vars["conversation_id"])
+}
+
+// ParseInt64 Convert string to int64
+func ParseInt64(s string) int64 {
+	i, err := strconv.ParseInt(s, 10, 64)
+	if err != nil {
+		fmt.Errorf("error: %s", err)
+		return 0
+	}
+	return i
+}
+
+// GetUserId get user id from request
 func GetUserId(r *http.Request) int64 {
-	userId := 0
+	userId := int64(0)
 	r.Header.Get("user_id")
 	if userIdStr := r.Header.Get("user_id"); userIdStr != "" {
-		userId, _ = strconv.Atoi(userIdStr)
+		userId = ParseInt64(userIdStr)
 	}
-	return int64(userId)
+	return userId
 }
 
 var (
