@@ -12,6 +12,7 @@ type Conversation struct {
 	UserIdA        int64 `json:"user_id_a"`
 	UserIdB        int64 `json:"user_id_b"`
 	CreatedAt      int64 `json:"created_at" gorm:"autoCreateTime"`
+	StatusId       int64 `json:"status_id"`
 }
 
 type User struct {
