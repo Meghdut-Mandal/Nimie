@@ -1,0 +1,17 @@
+POST http://localhost:8080/user/register
+Content-Type: application/json
+
+{
+  "public_key": "MIIBCgKCAQEAzxnXj3tWQw3eB6h5wpVx8sf2h7EJBl+LR8lliWBotzhtUF14b6p8NSsrPx6ymTr2Z+m+m43X8TlDeDPA2f1/Zy5eh9Ewdo2eXLv/NLPcg8DChMPNSPHOl4XpAv2WIcowirwb6PdTganqkPtgO1zqn+xFdMwHwFWDSZJxXU9FhNYyvP2mxHp8dNnqgcFXeFIUmxEmJYJHoEKopksVN3ifnFYfLdo05gKEHqkXIvGeo/bleaH7ZLbG714gjBozlK1plnGCuj63oVoMsMf1pgzujo1oOBgBQrRKWcSuWNG5OnbfH76VB2t8Qd8DPupswYiVA1M/D/Eut4FGhQDvEBIBTQIDAQAB"
+}
+
+
+###
+
+POST  http://localhost:8080/status/create
+Content-Type: application/json
+user_id: 1
+
+{
+  "text": "kdcdk c c dcdk cdwcd ckwd kd ckd kd"
+}
