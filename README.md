@@ -1,10 +1,4 @@
-# Nimie_alpha
-An end-to-end encrypted secret messaging service.
-
-
-
-## Nimie
-
+# Nimie
 
 ### An End-to-end encrypted Anonymous Messaging Service.
 
