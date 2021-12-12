@@ -6,8 +6,8 @@ import "testing"
 func TestConverstionsCrud(t *testing.T) {
 	// add conversation
 	conversation := &Conversation{
-		UserIdA: "34234234",
-		UserIdB: "jkkjwbf",
+		UserIdA: 134,
+		UserIdB: 31434,
 	}
 	AddConversation(conversation)
 	readData := GetConversation(conversation.ConversationId)

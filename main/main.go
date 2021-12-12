@@ -18,6 +18,7 @@ func loggingMiddleware(next http.Handler) http.Handler {
 
 var RegisterUserRoutes = func(router *mux.Router) {
 	router.HandleFunc("/user/register", controllers.RegisterUser).Methods("POST")
+	router.HandleFunc("/status/create", controllers.CreateStatus).Methods("POST")
 }
 
 func main() {

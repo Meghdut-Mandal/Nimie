@@ -17,9 +17,10 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	user := models.AddNewUser(requestBody.PublicKey)
-	utils.RespondWithJSON(w, http.StatusOK, map[string]interface{}{
-		"message":    "User registered successfully",
-		"user_id":    user.UserId,
-		"created_at": user.CreateTime,
+	utils.RespondWithJSON(w, http.StatusOK, models.UserCreated{
+		UserId:    user.UserId,
+		CreatedAt: user.CreateTime,
+		Message:   "User created successfully",
 	})
+
 }
