@@ -1,8 +1,8 @@
 package models
 
 import (
-	"Nimie_alpha/config"
-	"Nimie_alpha/utils"
+	"Nimie/config"
+	"Nimie/utils"
 	"gorm.io/gorm"
 	"time"
 )
@@ -80,4 +80,22 @@ func AddStatus(text *string, userId int64) *Status {
 // AddMessage Add messages to db
 func AddMessage(message *ChatMessage) {
 	db.Create(message)
+}
+
+// RemoveStatus remove status from the database
+func RemoveStatus(statusId int64, userId int64) string {
+	status := &Status{}
+	db.Where("status_id = ?", statusId).First(status)
+
+	if status.CreateTime == 0 {
+		return "Status not found"
+	} else if status.UserId != userId {
+		return "You are not the owner of this status"
+	}
+
+	if status.UserId == userId {
+		db.Delete(status)
+		return "Status deleted"
+	}
+	return "You are not allowed to delete this status"
 }

@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	"Nimie_alpha/models"
-	"Nimie_alpha/utils"
+	"Nimie/models"
+	"Nimie/utils"
 	"net/http"
 )
 

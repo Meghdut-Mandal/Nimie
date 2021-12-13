@@ -1,4 +1,4 @@
-module Nimie_alpha
+module Nimie
 
 go 1.17
 

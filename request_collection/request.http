@@ -15,3 +15,8 @@ user_id: 1
 {
   "text": "kdcdk c c dcdk cdwcd ckwd kd ckd kd"
 }
+
+###
+
+DELETE http://localhost:8080/status/3
+user_id: 1

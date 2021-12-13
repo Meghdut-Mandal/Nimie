@@ -1,7 +1,7 @@
 package main
 
 import (
-	"Nimie_alpha/controllers"
+	"Nimie/controllers"
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
 	"log"
@@ -22,7 +22,7 @@ var RegisterUserRoutes = func(router *mux.Router) {
 	router.HandleFunc("/user/register", controllers.RegisterUser).Methods("POST")
 	router.HandleFunc("/status/create", controllers.CreateStatus).Methods("POST")
 	router.HandleFunc("/conversation/{conversation_id:[0-9]+}/{user_id:[0-9]+}", controllers.HandleChatConnections)
-
+	router.HandleFunc("/status/{status_id:[0-9]+}", controllers.DeleteStatus).Methods("DELETE")
 }
 
 func main() {
