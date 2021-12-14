@@ -23,6 +23,7 @@ var RegisterUserRoutes = func(router *mux.Router) {
 	router.HandleFunc("/status/create", controllers.CreateStatus).Methods("POST")
 	router.HandleFunc("/conversation/{conversation_id:[0-9]+}/{user_id:[0-9]+}", controllers.HandleChatConnections)
 	router.HandleFunc("/status/{status_id:[0-9]+}", controllers.DeleteStatus).Methods("DELETE")
+	router.HandleFunc("/status/reply", controllers.ReplyStatus).Methods("POST")
 }
 
 func main() {

@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/Nimie_alpha.iml" filepath="$PROJECT_DIR$/.idea/Nimie_alpha.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/Nimie.iml" filepath="$PROJECT_DIR$/.idea/Nimie.iml" />
     </modules>
   </component>
 </project>

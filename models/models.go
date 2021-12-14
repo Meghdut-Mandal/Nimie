@@ -45,6 +45,50 @@ func init() {
 	db.AutoMigrate(&Conversation{}, &User{}, &ChatMessage{}, &Status{})
 }
 
+func NewConversation(statusId int64, reply string, userIdB int64) (int64, string, error) {
+
+	// Read status from database
+	status := Status{}
+	db.Where("status_id = ?", statusId).First(&status)
+	// check if the status is valid
+	if status.StatusId == 0 {
+		return -1, "", utils.NewError("Status not found")
+	}
+
+	userIdA := status.UserId
+	// Read userA from database
+	userA := User{}
+	db.Where("user_id = ?", userIdA).First(&userA)
+	// check if the user is valid
+	if userA.UserId == 0 {
+		return -1, "", utils.NewError("User not found")
+	}
+	// read userB from database
+	userB := User{}
+	db.Where("user_id = ?", userIdB).First(&userB)
+	// check if the user is valid
+	if userB.UserId == 0 {
+		return -1, "", utils.NewError("User not found")
+	}
+
+	conversation := Conversation{
+		UserIdA:  userIdA,
+		UserIdB:  userIdB,
+		StatusId: statusId,
+	}
+	err := db.Create(&conversation).Error
+	if err != nil {
+		return -1, "", err
+	}
+	chatMessage := ChatMessage{
+		Message:        reply,
+		ConversationId: conversation.ConversationId,
+		UserId:         userIdB,
+	}
+	AddMessage(&chatMessage)
+	return conversation.ConversationId, userA.PublicKey, nil
+}
+
 // AddConversation Add conversion to database
 func AddConversation(conversation *Conversation) {
 	db.Create(conversation)
@@ -87,7 +131,7 @@ func RemoveStatus(statusId int64, userId int64) string {
 	status := &Status{}
 	db.Where("status_id = ?", statusId).First(status)
 
-	if status.CreateTime == 0 {
+	if status.StatusId == 0 {
 		return "Status not found"
 	} else if status.UserId != userId {
 		return "You are not the owner of this status"

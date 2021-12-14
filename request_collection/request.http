@@ -10,7 +10,7 @@ Content-Type: application/json
 
 POST  http://localhost:8080/status/create
 Content-Type: application/json
-user_id: 1
+user_id: 3
 
 {
   "text": "kdcdk c c dcdk cdwcd ckwd kd ckd kd"
@@ -20,3 +20,14 @@ user_id: 1
 
 DELETE http://localhost:8080/status/3
 user_id: 1
+
+###
+
+POST http://localhost:8080/status/reply
+Content-Type: application/json
+user_id: 1
+
+{
+  "reply": "kdcdk c c dcdk cdwcd ckwd kd ckd kd",
+  "status_id": 13
+}

@@ -8,3 +8,8 @@ type UserCreated struct {
 	CreatedAt int64  `json:"created_at"`
 	UserId    int64  `json:"user_id"`
 }
+
+type ConversationCreated struct {
+	ConversationID int64  `json:"conversation_id"`
+	PublicKey      string `json:"public_key"`
+}

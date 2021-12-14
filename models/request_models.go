@@ -7,3 +7,8 @@ type RegisterUser struct {
 type CreateStatus struct {
 	Text string `json:"text"`
 }
+
+type InitiateConversation struct {
+	Reply    string `json:"reply"`
+	StatusId int64  `json:"status_id"`
+}
