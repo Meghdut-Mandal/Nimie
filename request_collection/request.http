@@ -31,3 +31,13 @@ user_id: 1
   "reply": "kdcdk c c dcdk cdwcd ckwd kd ckd kd",
   "status_id": 13
 }
+
+###
+POST http://localhost:8080/conversation
+Content-Type: application/json
+user_id: 1
+
+{
+  "message_id": 10,
+  "conversation_id": 3
+}

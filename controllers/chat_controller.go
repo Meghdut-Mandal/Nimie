@@ -7,6 +7,7 @@ import (
 	"github.com/gorilla/websocket"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 // Map of connection id to list of active clients
@@ -28,6 +29,18 @@ func GetIds(r *http.Request) (int64, int64) {
 func HandleChatConnections(w http.ResponseWriter, r *http.Request) {
 	// Upgrade initial GET request to a websocket
 	conversationId, userId := GetIds(r)
+	// check if the conversation exists
+	conversation := models.GetConversation(conversationId)
+	if conversation.ConversationId == 0 {
+		http.Error(w, "Conversation does not exist", http.StatusBadRequest)
+		return
+	}
+	// check if the user is in the conversation
+	if !(conversation.UserIdB == userId || conversation.UserIdA == userId) {
+		http.Error(w, "User is not in the conversation", http.StatusBadRequest)
+		return
+	}
+
 	// add the connection to the map
 	ws, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
@@ -92,4 +105,27 @@ func deleteClient(clientList []*websocket.Conn, client *websocket.Conn) {
 			break
 		}
 	}
+}
+
+func GetMessages(w http.ResponseWriter, r *http.Request) {
+	requestBody := models.GetConversationMessages{}
+	utils.ParseBody(r, &requestBody)
+	//check if the conversation id is valid
+	if requestBody.MessageId == 0 {
+		utils.RespondWithError(w, http.StatusBadRequest, "Invalid conversation id")
+		return
+	} else if requestBody.ConversationId == 0 {
+		utils.RespondWithError(w, http.StatusBadRequest, "Invalid user id")
+		return
+	}
+	messages, err := models.GetMessages(requestBody.MessageId, requestBody.ConversationId)
+	// handel error
+	if err != nil {
+		utils.RespondWithError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	utils.RespondWithJSON(w, http.StatusOK, models.ConversationMessages{
+		Messages: messages,
+		Status:   strconv.Itoa(len(messages)) + " Messages are read.",
+	})
 }

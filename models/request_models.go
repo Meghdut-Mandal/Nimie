@@ -12,3 +12,8 @@ type InitiateConversation struct {
 	Reply    string `json:"reply"`
 	StatusId int64  `json:"status_id"`
 }
+
+type GetConversationMessages struct {
+	MessageId      int64 `json:"message_id"`
+	ConversationId int64 `json:"conversation_id"`
+}

@@ -13,3 +13,8 @@ type ConversationCreated struct {
 	ConversationID int64  `json:"conversation_id"`
 	PublicKey      string `json:"public_key"`
 }
+
+type ConversationMessages struct {
+	Messages []ChatMessage `json:"messages"`
+	Status   string        `json:"status"`
+}

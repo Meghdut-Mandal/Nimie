@@ -143,3 +143,15 @@ func RemoveStatus(statusId int64, userId int64) string {
 	}
 	return "You are not allowed to delete this status"
 }
+
+func GetMessages(messageId int64, conversationId int64) ([]ChatMessage, error) {
+	// read conversation from db
+	conversation := GetConversation(conversationId)
+	// check if the conversation is valid
+	if conversation.ConversationId == 0 {
+		return []ChatMessage{}, utils.NewError("Conversation not found")
+	}
+	var messages []ChatMessage
+	db.Where("conversation_id = ? and message_id < ?", conversationId, messageId).Limit(25).Find(&messages)
+	return messages, nil
+}
