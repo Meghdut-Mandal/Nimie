@@ -11,9 +11,30 @@
 This service basically empowers you to have short anonymous conversations with people, with the added security of end-to-end encryption. The interface is intuitive enough for users to use it like a regular IM app.
 
 
+
+### Building
+
+
+
+* Windows
+  1. The best way would be installing via [Chocolaty](https://chocolatey.org/install)
+  2. Install golang **choco install golang **
+  3. Install gcc mingw **choco install mingw**
+  4. Clone this repo  git clone [https://github.com/Meghdut-Mandal/Nimie.git](https://github.com/Meghdut-Mandal/Nimie.git)
+  5. Inside the folder execute **go build -o app Nimie/main**
+  6. An app.exe executable is generated which can be run.
+* Mac Os
+  1. The easiest way would be installing via [HomeBrew](https://docs.brew.sh/Installation)
+  2. Install golang and gcc      **brew install go gcc**
+  3. Clone this repo  git clone [https://github.com/Meghdut-Mandal/Nimie.git](https://github.com/Meghdut-Mandal/Nimie.git)
+  4. Inside the folder execute **go build -o app Nimie/main**
+  5. Add executable permissions **chmod +x app**
+  6. Now to run the server **./app**
+
+
 ## User Story
 
-Lupita, an undergrad student of kiit, is tired of using whatsapp and scrolling through instagram. Most of her conversions over whatsapp are mundane and mostly about regular college stuff. To have some fun and possibly get some honest compliments from people, she decides to try out the Nimie App. Via the app she generates a unique link and shares it over her whatsapp status. Within a few hours, her app inbox gets filled with various messages ranging from “I love you” to “Kaam dhanda nahi hai kiya? ”. She can then tap on the “I love you” text and replies back with a painful “Sorry I’ve a bf”. The anonymous person(aka simp) then gets a notification of the same. Lupita shares a screenshot of the conversation on her whatsapp for flexing. After 24 hours the link and the message box expires.
+Lupita, an undergrad student of kiit, is tired of using whatsapp and scrolling through instagram. Most of her conversions over whatsapp are mundane and mostly about regular college stuff. To have some fun and possibly get some honest compliments from people, she decides to try out the Nimie App. Via the app she generates a unique link and shares it over her whatsapp status. Within a few hours, her app inbox gets filled with various messages ranging from “I love you” to “Kaam dhanda nahi hai kiya? ”. She can then tap on the “I love you” text and replies back with a painful “Sorry I’ve a bf”. The anonymous person(aka simp) then gets a notification of the same. Lupita shares a screenshot of the conversation on her whatsapp for flexing. After 24 hours the link expires. However the conversations remain
 
 
 ## Proposed Architecture
@@ -22,9 +43,9 @@ Lupita, an undergrad student of kiit, is tired of using whatsapp and scrolling t
 
 * Asymmetric Cryptography( public key and private key encryption)
 * Discord Threads as backend (in version 2)
-* Normal Golang +sqlite backend (in version 1)
+* Normal rust +sqlite backend (in version 1)
 * Redis
-* Cloudflare Workers for hosting the frontend.
+* Cloudflare Workers for hosting the frontend. (in version 2)
 
 
 ## Technical Overview
@@ -173,6 +194,8 @@ DONE
   </tr>
   <tr>
    <td>Delete Status
+<p>
+DONE
    </td>
    <td>Delete:
 <p>
@@ -190,18 +213,20 @@ DONE
   </tr>
   <tr>
    <td>Initiate Conversation
+<p>
+DONE
    </td>
    <td>POST:
 <p>
-/status/reply/{id}
+/status/reply
    </td>
    <td>Json Body:
 <p>
 {
 <p>
-“text”: “ Nice Status!”,
+“reply”: “ Nice Status!”
 <p>
- “b_key” :”dwd33e”
+“status_id”: 2425
 <p>
 }
    </td>
@@ -216,6 +241,53 @@ DONE
     “a_key”: “cw242d…”
 <p>
    }
+</li>
+</ul>
+   </td>
+  </tr>
+  <tr>
+   <td>Get Conversation 
+<p>
+Messages 
+<p>
+DONE
+   </td>
+   <td>POST
+<p>
+
+<p>
+/conversation
+   </td>
+   <td>Json Body
+<p>
+{
+<p>
+“message_id” : 23,
+<p>
+“conversation_id” : 32323
+<p>
+}
+<p>
+The limit of messages received is fixed at a single request  25. Those 25 messages which are less than the given id are returned.
+   </td>
+   <td>
+<ul>
+
+<li>200 
+    {
+<p>
+
+<p>
+     “status” : “25 messages fetched”,
+<p>
+     “messages” : [ ……]
+<p>
+      }
+<ul>
+
+<li>400 -> not a part of the conversation
+</li>
+</ul>
 </li>
 </ul>
    </td>
@@ -270,4 +342,3 @@ Conversation
    </td>
   </tr>
 </table>
-
