@@ -193,6 +193,33 @@ DONE
    </td>
   </tr>
   <tr>
+   <td>Get Status 
+   </td>
+   <td>GET 
+<p>
+/status/{unique_id}
+   </td>
+   <td>nil
+   </td>
+   <td>
+<ul>
+
+<li>200 JSON
+    {
+<p>
+
+    “status_id” :45345,
+<p>
+
+    “text”: “nice status”
+
+<p>
+           }
+</li>
+</ul>
+   </td>
+  </tr>
+  <tr>
    <td>Delete Status
 <p>
 DONE
@@ -342,3 +369,4 @@ Conversation
    </td>
   </tr>
 </table>
+
