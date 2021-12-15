@@ -67,3 +67,25 @@ func ReplyStatus(w http.ResponseWriter, r *http.Request) {
 		PublicKey:      publicKey,
 	})
 }
+
+func GetStatus(w http.ResponseWriter, r *http.Request) {
+	// get GetStatus struct from request body
+	vars := mux.Vars(r)
+	linKId := vars["link_id"]
+
+	if linKId == "" {
+		utils.RespondWithError(w, http.StatusBadRequest, "statusId is required")
+		return
+	}
+	status := models.GetStatusFromLink(linKId)
+	// check if status is valid
+	if status.StatusId == 0 {
+		utils.RespondWithError(w, http.StatusBadRequest, "status is not found")
+		return
+	}
+
+	utils.RespondWithJSON(w, http.StatusOK, models.GetStatusResponse{
+		StatusId: status.StatusId,
+		Text:     status.HeaderText,
+	})
+}

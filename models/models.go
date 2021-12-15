@@ -155,3 +155,10 @@ func GetMessages(messageId int64, conversationId int64) ([]ChatMessage, error) {
 	db.Where("conversation_id = ? and message_id < ?", conversationId, messageId).Limit(25).Find(&messages)
 	return messages, nil
 }
+
+// GetStatusFromLink get status form unique link
+func GetStatusFromLink(linkId string) *Status {
+	status := &Status{}
+	db.Where("link_id = ?", linkId).First(status)
+	return status
+}

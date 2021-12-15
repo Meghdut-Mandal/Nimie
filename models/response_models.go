@@ -18,3 +18,8 @@ type ConversationMessages struct {
 	Messages []ChatMessage `json:"messages"`
 	Status   string        `json:"status"`
 }
+
+type GetStatusResponse struct {
+	Text     string `json:"text"`
+	StatusId int64  `json:"status_id"`
+}

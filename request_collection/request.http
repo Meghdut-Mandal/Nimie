@@ -41,3 +41,7 @@ user_id: 1
   "message_id": 10,
   "conversation_id": 3
 }
+
+###
+GET http://localhost:8080/status/1vuHsnYxaKgd
+
