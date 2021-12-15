@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	"Nimie/models"
-	"Nimie/utils"
+	"github.com/Meghdut-Mandal/Nimie/models"
+	"github.com/Meghdut-Mandal/Nimie/utils"
 	"net/http"
 )
 

@@ -19,7 +19,7 @@ COPY . .
 
 ### Build the Go app for a linux OS
 ### 'scratch' and 'alpine' both are Linux distributions
-RUN go build -o app Nimie/main
+RUN go build -o app github.com/Meghdut-Mandal/Nimie/main
 
 ### Define the running image
 #FROM scratch

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"Nimie/controllers"
+	"github.com/Meghdut-Mandal/Nimie/controllers"
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
 	"log"
@@ -39,5 +39,5 @@ func main() {
 	r.Use(loggingMiddleware)
 	http.Handle("/", r)
 	go controllers.HandleMessages()
-	log.Fatal(http.ListenAndServe("localhost:"+port, r))
+	log.Fatal(http.ListenAndServe(":"+port, r))
 }

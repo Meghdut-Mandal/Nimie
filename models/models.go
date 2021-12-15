@@ -1,8 +1,8 @@
 package models
 
 import (
-	"Nimie/config"
-	"Nimie/utils"
+	"github.com/Meghdut-Mandal/Nimie/config"
+	"github.com/Meghdut-Mandal/Nimie/utils"
 	"gorm.io/gorm"
 	"time"
 )
