@@ -52,11 +52,15 @@ func GenerateKey64() (pri64, pub64 string, err error) {
 }
 
 func PublicKeyFrom(key []byte) (*rsa.PublicKey, error) {
-	pubInterface, err := x509.ParsePKCS1PublicKey(key)
+	pubInterface, err := x509.ParsePKIXPublicKey(key)
 	if err != nil {
 		return nil, err
 	}
-	return pubInterface, nil
+	pub, ok := pubInterface.(*rsa.PublicKey)
+	if !ok {
+		return nil, errors.New("invalid public key")
+	}
+	return pub, nil
 }
 
 func PublicKeyFrom64(key string) (*rsa.PublicKey, error) {
