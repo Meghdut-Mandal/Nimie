@@ -11,6 +11,10 @@
 This service basically empowers you to have short anonymous conversations with people, with the added security of end-to-end encryption. The interface is intuitive enough for users to use it like a regular IM app.
 
 
+## User Story
+
+Lupita, an undergrad student of kiit, is tired of using whatsapp and scrolling through instagram. Most of her conversions over whatsapp are mundane and mostly about regular college stuff. To have some fun and possibly get some honest compliments from people, she decides to try out the Nimie App. Via the app she generates a unique link and shares it over her whatsapp status. Within a few hours, her app inbox gets filled with various messages ranging from “I love you” to “Kaam dhanda nahi hai kiya? ”. She can then tap on the “I love you” text and replies back with a painful “Sorry I’ve a bf”. The anonymous person(aka simp) then gets a notification of the same. Lupita shares a screenshot of the conversation on her whatsapp for flexing. After 24 hours the link expires. However the conversations remain
+
 
 ### Building
 
@@ -30,11 +34,6 @@ This service basically empowers you to have short anonymous conversations with p
   4. Inside the folder execute **go build -o app Nimie/main**
   5. Add executable permissions **chmod +x app**
   6. Now to run the server **./app**
-
-
-## User Story
-
-Lupita, an undergrad student of kiit, is tired of using whatsapp and scrolling through instagram. Most of her conversions over whatsapp are mundane and mostly about regular college stuff. To have some fun and possibly get some honest compliments from people, she decides to try out the Nimie App. Via the app she generates a unique link and shares it over her whatsapp status. Within a few hours, her app inbox gets filled with various messages ranging from “I love you” to “Kaam dhanda nahi hai kiya? ”. She can then tap on the “I love you” text and replies back with a painful “Sorry I’ve a bf”. The anonymous person(aka simp) then gets a notification of the same. Lupita shares a screenshot of the conversation on her whatsapp for flexing. After 24 hours the link expires. However the conversations remain
 
 
 ## Proposed Architecture
