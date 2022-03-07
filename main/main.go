@@ -24,6 +24,8 @@ func main() {
 
 	grpcServer := grpc.NewServer()
 
+	log.Printf("Server started on port 8080")
+
 	grpc_api.RegisterNimieApiServer(grpcServer, &s)
 
 	if err := grpcServer.Serve(lis); err != nil {
