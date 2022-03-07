@@ -129,3 +129,22 @@ func GetMessages(w http.ResponseWriter, r *http.Request) {
 		Status:   strconv.Itoa(len(messages)) + " Messages are read.",
 	})
 }
+
+// GetConversations  conversation messages of a user
+func GetConversations(w http.ResponseWriter, r *http.Request) {
+	// get the user id from the request
+	userid := utils.GetUserId(r)
+
+	// get all Conversations of the user
+	conversations := models.GetConversations(userid)
+
+	// if conversation is empty
+	if len(conversations) == 0 {
+		utils.RespondWithError(w, http.StatusBadRequest, "No conversation found")
+		return
+	}
+
+	// respond with the conversation messages
+	utils.RespondWithJSON(w, http.StatusOK, conversations)
+
+}

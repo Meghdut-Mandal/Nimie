@@ -162,3 +162,10 @@ func GetStatusFromLink(linkId string) *Status {
 	db.Where("link_id = ?", linkId).First(status)
 	return status
 }
+
+// GetConversations Get conversation from database of a user
+func GetConversations(userId int64) []Conversation {
+	var conversations []Conversation
+	db.Select("conversation_id").Where("user_id_a = ? or user_id_b = ?", userId, userId).Find(&conversations)
+	return conversations
+}
