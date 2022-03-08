@@ -31,7 +31,8 @@ FROM alpine:3.14
 WORKDIR /app
 
 ### Copy built binary application from 'builder' image
-COPY --from=builder /app .
+COPY --from=builder /app/app .
+COPY ./.env  .
 
 EXPOSE 8080
 ### Run the binary application
