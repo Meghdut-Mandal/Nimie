@@ -15,7 +15,7 @@ func main() {
 	}
 	//port := os.Getenv("PORT")
 
-	lis, err := net.Listen("tcp", ":8080")
+	lis, err := net.Listen("tcp", "localhost:8080")
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
