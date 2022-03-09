@@ -25,8 +25,18 @@ func (*NimieApiServerImpl) RegisterUser(_ context.Context, request *RegisterUser
 		Jwt:       "User created successfully",
 	}, nil
 }
-func (*NimieApiServerImpl) CreateStatus(context.Context, *CreateStatusRequest) (*CreateStatusResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateStatus not implemented")
+func (*NimieApiServerImpl) CreateStatus(_ context.Context, r *CreateStatusRequest) (*CreateStatusResponse, error) {
+
+	if r.Text == "" {
+		return nil, status.Error(codes.InvalidArgument, "Status text is empty")
+	}
+
+	statusCreated := models.AddStatus(&r.Text, r.UserId)
+
+	return &CreateStatusResponse{
+		StatusId:   statusCreated.StatusId,
+		CreateTime: statusCreated.CreateTime,
+	}, nil
 }
 func (*NimieApiServerImpl) DeleteStatus(context.Context, *DeleteStatusRequest) (*GenericResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteStatus not implemented")

@@ -29,11 +29,13 @@ message RegisterUserRequest {
 }
 message CreateStatusRequest {
   string text = 1;
+  int64 user_id = 2;
 }
 
 message InitiateConversationRequest {
   string reply = 1;
   int64 status_id = 2;
+  int64 user_id = 3;
 }
 
 message GetConversationMessagesRequest {
@@ -47,6 +49,7 @@ message GenericRequest {
 
 message DeleteStatusRequest {
   int64 status_id = 1;
+  int64 user_id = 2;
 }
 
 message GetStatusRequest {
@@ -67,6 +70,7 @@ message GetConversationsRequest {
 
 message CreateStatusResponse {
     int64 status_id = 1;
+    int64 create_time = 2;
 }
 
 message RegisterUserResponse {
