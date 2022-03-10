@@ -36,6 +36,7 @@ func (*NimieApiServerImpl) CreateStatus(_ context.Context, r *CreateStatusReques
 	return &CreateStatusResponse{
 		StatusId:   statusCreated.StatusId,
 		CreateTime: statusCreated.CreateTime,
+		LinkId:     statusCreated.LinkId,
 	}, nil
 }
 func (*NimieApiServerImpl) DeleteStatus(context.Context, *DeleteStatusRequest) (*GenericResponse, error) {
