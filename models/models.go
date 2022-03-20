@@ -121,6 +121,13 @@ func AddStatus(text *string, userId int64) *Status {
 	return status
 }
 
+// GetAllStatus  to read all status from database given a offset and limit
+func GetBulkStatus(offset int, limit int) []Status {
+	var statuses []Status
+	db.Order("create_time desc").Offset(offset).Limit(limit).Find(&statuses)
+	return statuses
+}
+
 // AddMessage Add messages to db
 func AddMessage(message *ChatMessage) {
 	db.Create(message)

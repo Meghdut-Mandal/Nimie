@@ -39,6 +39,25 @@ func (*NimieApiServerImpl) CreateStatus(_ context.Context, r *CreateStatusReques
 		LinkId:     statusCreated.LinkId,
 	}, nil
 }
+
+func (*NimieApiServerImpl) GetBulkStatus(_ context.Context, in *GetBulkStatusRequest) (*GetBulkStatusResponse, error) {
+	statuses := models.GetBulkStatus(int(in.GetOffset()), int(in.GetLimit()))
+
+	bulkStatus := make([]*ApiStatus, len(statuses))
+	for i, statusObj := range statuses {
+		bulkStatus[i] = &ApiStatus{
+			StatusId:   statusObj.StatusId,
+			CreateTime: statusObj.CreateTime,
+			LinkId:     statusObj.LinkId,
+			Text:       statusObj.HeaderText,
+		}
+	}
+
+	return &GetBulkStatusResponse{
+		BulkStatus: bulkStatus,
+	}, nil
+}
+
 func (*NimieApiServerImpl) DeleteStatus(context.Context, *DeleteStatusRequest) (*GenericResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteStatus not implemented")
 }
