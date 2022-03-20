@@ -61,8 +61,18 @@ func (*NimieApiServerImpl) GetBulkStatus(_ context.Context, in *GetBulkStatusReq
 func (*NimieApiServerImpl) DeleteStatus(context.Context, *DeleteStatusRequest) (*GenericResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteStatus not implemented")
 }
-func (*NimieApiServerImpl) ReplyStatus(context.Context, *InitiateConversationRequest) (*InitiateConversationResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ReplyStatus not implemented")
+func (*NimieApiServerImpl) ReplyStatus(_ context.Context, request *InitiateConversationRequest) (*InitiateConversationResponse, error) {
+
+	if request.Reply == "" {
+		return nil, status.Error(codes.InvalidArgument, "Status text is empty")
+	}
+
+	ConversationId, publicKey, err := models.NewConversation(request.StatusId, request.Reply, request.UserId)
+
+	return &InitiateConversationResponse{
+		ConversationId: ConversationId,
+		PublicKey:      publicKey,
+	}, err
 }
 func (*NimieApiServerImpl) GetConversationMessages(context.Context, *GetConversationMessagesRequest) (*GetConversationMessagesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetConversationMessages not implemented")
