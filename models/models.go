@@ -151,6 +151,12 @@ func RemoveStatus(statusId int64, userId int64) string {
 	return "You are not allowed to delete this status"
 }
 
+func GetUserPublicKey(userId int64) string {
+	user := &User{}
+	db.Where("user_id = ?", userId).First(user)
+	return user.PublicKey
+}
+
 func GetMessages(messageId int64, conversationId int64) ([]ChatMessage, error) {
 	// read conversation from db
 	conversation := GetConversation(conversationId)
@@ -171,8 +177,16 @@ func GetStatusFromLink(linkId string) *Status {
 }
 
 // GetConversations Get conversation from database of a user
-func GetConversations(userId int64) []Conversation {
+func GetConversations(userId int64, offset int, limit int) []Conversation {
 	var conversations []Conversation
-	db.Select("conversation_id").Where("user_id_a = ? or user_id_b = ?", userId, userId).Find(&conversations)
+	db.Where("user_id_a = ? or user_id_b = ?", userId, userId).
+		Offset(offset).Limit(limit).
+		Find(&conversations)
 	return conversations
+}
+
+func GetLastMessage(conversationId int64) string {
+	message := &ChatMessage{}
+	db.Where("conversation_id = ?", conversationId).Order("create_time desc").First(message)
+	return message.Message
 }

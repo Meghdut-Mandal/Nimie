@@ -74,9 +74,46 @@ func (*NimieApiServerImpl) ReplyStatus(_ context.Context, request *InitiateConve
 		PublicKey:      publicKey,
 	}, err
 }
+
+func (*NimieApiServerImpl) GetConversationList(_ context.Context, request *ConversationListRequest) (*ConversationListResponse, error) {
+	conversations := models.GetConversations(request.GetUserId(), int(request.GetOffset()), int(request.GetLimit()))
+
+	bulkApiConversation := make([]*ApiConversation, len(conversations))
+	for i, conversation := range conversations {
+
+		otherUserId := int64(0)
+		// get the public key of the other user
+		if conversation.UserIdA == request.GetUserId() {
+			otherUserId = conversation.UserIdB
+		} else {
+			otherUserId = conversation.UserIdA
+		}
+
+		otherUserPublicKey := models.GetUserPublicKey(otherUserId)
+
+		// Get last message of the conversation
+		lastMessage := models.GetLastMessage(conversation.ConversationId)
+
+		bulkApiConversation[i] = &ApiConversation{
+			ConversationId: conversation.ConversationId,
+			StatusId:       conversation.StatusId,
+			CreateTime:     conversation.CreatedAt,
+			OtherPublicKey: otherUserPublicKey,
+			LastReply:      lastMessage,
+		}
+	}
+
+	return &ConversationListResponse{
+		Conversations: bulkApiConversation,
+		Status:        "Conversations fetched successfully",
+	}, nil
+}
+
 func (*NimieApiServerImpl) GetConversationMessages(context.Context, *GetConversationMessagesRequest) (*GetConversationMessagesResponse, error) {
+
 	return nil, status.Errorf(codes.Unimplemented, "method GetConversationMessages not implemented")
 }
-func (*NimieApiServerImpl) GetConversations(context.Context, *GetConversationsRequest) (*GetConversationsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetConversations not implemented")
-}
+
+/*
+Look for UnimplementedNimieApiServer methods in the pb.go file
+*/

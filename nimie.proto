@@ -19,6 +19,8 @@ message ApiConversation{
   int64 conversation_id = 1;
   int64 status_id = 2;
   int64 create_time = 3;
+  string other_public_key = 4;
+  string last_reply = 5;
 }
 
 message ApiStatus {
@@ -70,8 +72,10 @@ message GetStatusRequest {
   int64 status_id = 1;
 }
 
-message GetConversationsRequest {
+message ConversationListRequest {
   int64 user_id = 1;
+  int32 offset = 2;
+  int32 limit = 3;
 }
 
 
@@ -119,8 +123,8 @@ message GetStatusResponse {
   string text = 2;
 }
 
-message GetConversationsResponse {
-  repeated ApiTextMessage messages = 1;
+message ConversationListResponse {
+  repeated ApiConversation conversations = 1;
   string status = 2;
 }
 
@@ -138,7 +142,7 @@ service NimieApi {
 
   // conversation api
   rpc GetConversationMessages(GetConversationMessagesRequest) returns (GetConversationMessagesResponse);
-  rpc GetConversations(GetConversationsRequest) returns (GetConversationsResponse);
+  rpc GetConversationList(ConversationListRequest) returns (ConversationListResponse);
 
   // chat APi
 
@@ -147,7 +151,7 @@ service NimieApi {
 
 
 
-// To Build the API use the following cmd
+// To Build the API for golang use the following cmd
 // protoc --go_out=plugins=grpc:. *.proto
 
 

@@ -136,7 +136,7 @@ func GetConversations(w http.ResponseWriter, r *http.Request) {
 	userid := utils.GetUserId(r)
 
 	// get all Conversations of the user
-	conversations := models.GetConversations(userid)
+	conversations := models.GetConversations(userid, 0, 100)
 
 	// if conversation is empty
 	if len(conversations) == 0 {
