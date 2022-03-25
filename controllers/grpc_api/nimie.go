@@ -6,6 +6,7 @@ import (
 	"github.com/Meghdut-Mandal/Nimie/utils"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"io"
 )
 
 type NimieApiServerImpl struct {
@@ -109,11 +110,62 @@ func (*NimieApiServerImpl) GetConversationList(_ context.Context, request *Conve
 	}, nil
 }
 
+func (*NimieApiServerImpl) ChatConnect(stream NimieApi_ChatConnectServer) error {
+	// handle client messages
+	for {
+		rr, err := stream.Recv() // Recv is a blocking method which returns on client data
+		// io.EOF signals that the client has closed the connection
+		if err == io.EOF {
+			println("Client has closed connection")
+			break
+		}
+
+		// any other error means the transport between the server and client is unavailable
+		if err != nil {
+			println("Unable to read from client", "error", err)
+			return err
+		}
+
+		// handle the message
+
+		if rr.MessageType == 1 {
+			// convert the received message to a Message object
+			dbMessage := models.ChatMessage{
+				ConversationId: rr.Message.ConversationId,
+				UserId:         rr.Message.UserId,
+				Message:        rr.Message.Message,
+				MessageType:    rr.Message.ContentType,
+				IsSeen:         false,
+			}
+			savedMessage := models.AddMessage(&dbMessage)
+
+			err := stream.Send(&ChatServerResponse{
+				Messages: &ApiTextMessage{
+					ConversationId: savedMessage.ConversationId,
+					UserId:         0,
+					Message:        savedMessage.Message,
+					ContentType:    savedMessage.MessageType,
+					IsSeen:         savedMessage.IsSeen,
+					CreateTime:     savedMessage.CreateTime,
+					MessageId:      savedMessage.MessageId,
+				},
+				MessageType: 1,
+			})
+			if err != nil {
+				println("Unable to send message to client", "error", err)
+			}
+
+		}
+
+	}
+	return nil
+}
+
 func (*NimieApiServerImpl) GetConversationMessages(context.Context, *GetConversationMessagesRequest) (*GetConversationMessagesResponse, error) {
 
 	return nil, status.Errorf(codes.Unimplemented, "method GetConversationMessages not implemented")
 }
 
 /*
-Look for UnimplementedNimieApiServer methods in the pb.go file
+Look for UnimplementedNimieA piServer methods in the pb.go file
 */

@@ -11,8 +11,10 @@ message ApiTextMessage{
   int64 message_id = 1;
   int64 conversation_id = 2;
   int64 create_time = 3;
-  int64 sender_id = 4;
+  int64 user_id = 4;
   string message = 5;
+  string content_type = 6;
+  bool is_seen = 7;
 }
 
 message ApiConversation{
@@ -79,12 +81,19 @@ message ConversationListRequest {
 }
 
 
-
-
-
+message ChatClientRequest {
+  ApiTextMessage message = 1;
+  int32 message_type = 2; // messageType =  1 for text Message, 2 for Image, 3 for Typing Indicator, 4 for ping message
+}
 
 
 // Response Api Models for the Nimie API
+
+
+message ChatServerResponse {
+  int32 message_type = 1; //messageType =  1 for normal Message, 2 Typing Indicator, 3 for no more messages , 4 for pong message
+  ApiTextMessage messages = 2;
+}
 
 message GetBulkStatusResponse {
   repeated ApiStatus bulkStatus = 1;
@@ -146,6 +155,7 @@ service NimieApi {
 
   // chat APi
 
+  rpc chatConnect(stream ChatClientRequest) returns (stream ChatServerResponse);
 
 }
 

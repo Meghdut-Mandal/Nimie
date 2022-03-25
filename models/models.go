@@ -27,6 +27,8 @@ type ChatMessage struct {
 	CreateTime     int64  `json:"create_time" gorm:"autoCreateTime"`
 	UserId         int64  `json:"user_id"`
 	Message        string `json:"message"`
+	IsSeen         bool   `json:"is_seen"`
+	MessageType    string `json:"message_type"`
 }
 
 type Status struct {
@@ -129,8 +131,9 @@ func GetBulkStatus(offset int, limit int) []Status {
 }
 
 // AddMessage Add messages to db
-func AddMessage(message *ChatMessage) {
+func AddMessage(message *ChatMessage) ChatMessage {
 	db.Create(message)
+	return *message
 }
 
 // RemoveStatus remove status from the database
