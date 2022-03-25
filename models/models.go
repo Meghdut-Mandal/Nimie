@@ -11,20 +11,20 @@ type Conversation struct {
 	ConversationId int64 `json:"conversation_id" gorm:"primaryKey;autoIncrement;notNull"`
 	UserIdA        int64 `json:"user_id_a"`
 	UserIdB        int64 `json:"user_id_b"`
-	CreatedAt      int64 `json:"created_at" gorm:"autoCreateTime"`
+	CreatedAt      int64 `json:"created_at" gorm:"autoUpdateTime:milli"`
 	StatusId       int64 `json:"status_id"`
 }
 
 type User struct {
 	UserId     int64  `json:"user_id" gorm:"primaryKey;autoIncrement;notNull"`
-	CreateTime int64  `json:"create_time" gorm:"autoCreateTime"`
+	CreateTime int64  `json:"create_time" gorm:"autoUpdateTime:milli"`
 	PublicKey  string `json:"public_key"`
 }
 
 type ChatMessage struct {
 	MessageId      int64  `json:"message_id" gorm:"primaryKey;autoIncrement;notNull"`
 	ConversationId int64  `json:"conversation_id"`
-	CreateTime     int64  `json:"create_time" gorm:"autoCreateTime"`
+	CreateTime     int64  `json:"create_time" gorm:"autoUpdateTime:milli"`
 	UserId         int64  `json:"user_id"`
 	Message        string `json:"message"`
 	IsSeen         bool   `json:"is_seen"`
@@ -34,7 +34,7 @@ type ChatMessage struct {
 type Status struct {
 	StatusId   int64  `json:"status_id" gorm:"primaryKey;autoIncrement;notNull"`
 	UserId     int64  `json:"user_id"`
-	CreateTime int64  `json:"create_time" gorm:"autoCreateTime"`
+	CreateTime int64  `json:"create_time" gorm:"autoUpdateTime:milli"`
 	HeaderText string `json:"header_text"`
 	LinkId     string `json:"link_id"`
 }
