@@ -52,11 +52,16 @@ func (*NimieApiServerImpl) GetBulkStatus(_ context.Context, in *GetBulkStatusReq
 
 	bulkStatus := make([]*ApiStatus, len(statuses))
 	for i, statusObj := range statuses {
+
+		// get the public key of the user
+		publicKey := models.GetUserPublicKey(statusObj.UserId)
+
 		bulkStatus[i] = &ApiStatus{
 			StatusId:   statusObj.StatusId,
 			CreateTime: statusObj.CreateTime,
 			LinkId:     statusObj.LinkId,
 			Text:       statusObj.HeaderText,
+			PublicKey:  publicKey,
 		}
 	}
 

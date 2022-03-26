@@ -30,6 +30,7 @@ message ApiStatus {
   string text = 2;
   string link_id = 3;
   int64 create_time = 4;
+  string public_key = 5;
 }
 
 

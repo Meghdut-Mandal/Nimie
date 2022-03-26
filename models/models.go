@@ -47,6 +47,7 @@ func init() {
 	db.AutoMigrate(&Conversation{}, &User{}, &ChatMessage{}, &Status{})
 }
 
+// NewConversation Here user_id_b is the sender and user_id_a is the receiver
 func NewConversation(statusId int64, reply string, userIdB int64) (int64, string, error) {
 
 	// Read status from database
