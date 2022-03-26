@@ -12,7 +12,7 @@ import (
 type NimieApiServerImpl struct {
 }
 
-var clientConnections = make(map[int64]*NimieApi_ChatConnectServer)
+var chatClientConnections = make(map[int64]*NimieApi_ChatConnectServer)
 var conversationCache = make(map[int64]*models.Conversation)
 
 const SimpleMsgType = 1
@@ -124,14 +124,14 @@ func (*NimieApiServerImpl) ChatConnect(stream NimieApi_ChatConnectServer) error 
 		// io.EOF signals that the client has closed the connection
 		if err == io.EOF {
 			println("Client has closed connection")
-			clientConnections[userId] = nil
+			chatClientConnections[userId] = nil
 			break
 		}
 
 		// any other error means the transport between the server and client is unavailable
 		if err != nil {
 			println("Unable to read from client", "error", err)
-			clientConnections[userId] = nil
+			chatClientConnections[userId] = nil
 			return err
 		}
 
@@ -141,7 +141,7 @@ func (*NimieApiServerImpl) ChatConnect(stream NimieApi_ChatConnectServer) error 
 		userId = msg.UserId
 
 		// handle the message
-		clientConnections[userId] = &stream
+		chatClientConnections[userId] = &stream
 		println("Client connected with", "conversationId", msg.ConversationId)
 		println("Client id is ", "clientId", userId)
 
@@ -164,7 +164,7 @@ func (*NimieApiServerImpl) ChatConnect(stream NimieApi_ChatConnectServer) error 
 
 		// find the other user's conversation stream
 		println("Other user id", otherUserId)
-		otherClientConnection := clientConnections[otherUserId]
+		otherClientConnection := chatClientConnections[otherUserId]
 
 		if rr.MessageType == SimpleMsgType {
 			// convert the received message to a Message object
@@ -234,7 +234,7 @@ func (*NimieApiServerImpl) ChatConnect(stream NimieApi_ChatConnectServer) error 
 
 	}
 
-	clientConnections[userId] = nil
+	chatClientConnections[userId] = nil
 	return nil
 }
 
