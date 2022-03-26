@@ -11,28 +11,30 @@ type Conversation struct {
 	ConversationId int64 `json:"conversation_id" gorm:"primaryKey;autoIncrement;notNull"`
 	UserIdA        int64 `json:"user_id_a"`
 	UserIdB        int64 `json:"user_id_b"`
-	CreatedAt      int64 `json:"created_at" gorm:"autoCreateTime"`
+	CreatedAt      int64 `json:"created_at" gorm:"autoUpdateTime:milli"`
 	StatusId       int64 `json:"status_id"`
 }
 
 type User struct {
 	UserId     int64  `json:"user_id" gorm:"primaryKey;autoIncrement;notNull"`
-	CreateTime int64  `json:"create_time" gorm:"autoCreateTime"`
+	CreateTime int64  `json:"create_time" gorm:"autoUpdateTime:milli"`
 	PublicKey  string `json:"public_key"`
 }
 
 type ChatMessage struct {
 	MessageId      int64  `json:"message_id" gorm:"primaryKey;autoIncrement;notNull"`
 	ConversationId int64  `json:"conversation_id"`
-	CreateTime     int64  `json:"create_time" gorm:"autoCreateTime"`
+	CreateTime     int64  `json:"create_time" gorm:"autoUpdateTime:milli"`
 	UserId         int64  `json:"user_id"`
 	Message        string `json:"message"`
+	IsSeen         bool   `json:"is_seen"`
+	MessageType    string `json:"message_type"`
 }
 
 type Status struct {
 	StatusId   int64  `json:"status_id" gorm:"primaryKey;autoIncrement;notNull"`
 	UserId     int64  `json:"user_id"`
-	CreateTime int64  `json:"create_time" gorm:"autoCreateTime"`
+	CreateTime int64  `json:"create_time" gorm:"autoUpdateTime:milli"`
 	HeaderText string `json:"header_text"`
 	LinkId     string `json:"link_id"`
 }
@@ -45,6 +47,7 @@ func init() {
 	db.AutoMigrate(&Conversation{}, &User{}, &ChatMessage{}, &Status{})
 }
 
+// NewConversation Here user_id_b is the sender and user_id_a is the receiver
 func NewConversation(statusId int64, reply string, userIdB int64) (int64, string, error) {
 
 	// Read status from database
@@ -84,6 +87,8 @@ func NewConversation(statusId int64, reply string, userIdB int64) (int64, string
 		Message:        reply,
 		ConversationId: conversation.ConversationId,
 		UserId:         userIdB,
+		IsSeen:         false,
+		MessageType:    "text",
 	}
 	AddMessage(&chatMessage)
 	return conversation.ConversationId, userA.PublicKey, nil
@@ -121,9 +126,17 @@ func AddStatus(text *string, userId int64) *Status {
 	return status
 }
 
+// GetAllStatus  to read all status from database given a offset and limit
+func GetBulkStatus(offset int, limit int) []Status {
+	var statuses []Status
+	db.Order("create_time desc").Offset(offset).Limit(limit).Find(&statuses)
+	return statuses
+}
+
 // AddMessage Add messages to db
-func AddMessage(message *ChatMessage) {
+func AddMessage(message *ChatMessage) ChatMessage {
 	db.Create(message)
+	return *message
 }
 
 // RemoveStatus remove status from the database
@@ -144,6 +157,12 @@ func RemoveStatus(statusId int64, userId int64) string {
 	return "You are not allowed to delete this status"
 }
 
+func GetUserPublicKey(userId int64) string {
+	user := &User{}
+	db.Where("user_id = ?", userId).First(user)
+	return user.PublicKey
+}
+
 func GetMessages(messageId int64, conversationId int64) ([]ChatMessage, error) {
 	// read conversation from db
 	conversation := GetConversation(conversationId)
@@ -152,7 +171,7 @@ func GetMessages(messageId int64, conversationId int64) ([]ChatMessage, error) {
 		return []ChatMessage{}, utils.NewError("Conversation not found")
 	}
 	var messages []ChatMessage
-	db.Where("conversation_id = ? and message_id < ?", conversationId, messageId).Limit(25).Find(&messages)
+	db.Where("conversation_id = ? and message_id > ?", conversationId, messageId).Find(&messages)
 	return messages, nil
 }
 
@@ -161,4 +180,19 @@ func GetStatusFromLink(linkId string) *Status {
 	status := &Status{}
 	db.Where("link_id = ?", linkId).First(status)
 	return status
+}
+
+// GetConversations Get conversation from database of a user
+func GetConversations(userId int64, offset int, limit int) []Conversation {
+	var conversations []Conversation
+	db.Where("user_id_a = ? or user_id_b = ?", userId, userId).
+		Offset(offset).Limit(limit).
+		Find(&conversations)
+	return conversations
+}
+
+func GetLastMessage(conversationId int64) string {
+	message := &ChatMessage{}
+	db.Where("conversation_id = ?", conversationId).Order("create_time desc").First(message)
+	return message.Message
 }

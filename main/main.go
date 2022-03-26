@@ -1,45 +1,34 @@
 package main
 
 import (
-	"github.com/Meghdut-Mandal/Nimie/controllers"
-	"github.com/gorilla/mux"
+	"github.com/Meghdut-Mandal/Nimie/controllers/grpc_api"
 	"github.com/joho/godotenv"
+	"google.golang.org/grpc"
 	"log"
-	"net/http"
-	"os"
+	"net"
 )
-
-// main function
-
-func loggingMiddleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// Do stuff here
-		log.Println(r.Method + " " + r.RequestURI + " ")
-		// Call the next handler, which can be another middleware in the chain, or the final handler.
-		next.ServeHTTP(w, r)
-	})
-}
-
-var RegisterUserRoutes = func(router *mux.Router) {
-	router.HandleFunc("/user/register", controllers.RegisterUser).Methods("POST")
-	router.HandleFunc("/status/create", controllers.CreateStatus).Methods("POST")
-	router.HandleFunc("/status/{link_id}", controllers.GetStatus).Methods("GET")
-	router.HandleFunc("/status/{status_id:[0-9]+}", controllers.DeleteStatus).Methods("DELETE")
-	router.HandleFunc("/status/reply", controllers.ReplyStatus).Methods("POST")
-	router.HandleFunc("/conversation/{conversation_id:[0-9]+}/{user_id:[0-9]+}", controllers.HandleChatConnections)
-	router.HandleFunc("/conversation", controllers.GetMessages).Methods("POST")
-}
 
 func main() {
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
-	port := os.Getenv("PORT")
-	r := mux.NewRouter()
-	RegisterUserRoutes(r)
-	r.Use(loggingMiddleware)
-	http.Handle("/", r)
-	go controllers.HandleMessages()
-	log.Fatal(http.ListenAndServe(":"+port, r))
+	//port := os.Getenv("PORT")
+
+	lis, err := net.Listen("tcp", "localhost:8080")
+	if err != nil {
+		log.Fatalf("failed to listen: %v", err)
+	}
+
+	s := grpc_api.NimieApiServerImpl{}
+
+	grpcServer := grpc.NewServer()
+
+	log.Printf("Server started on port 8080")
+
+	grpc_api.RegisterNimieApiServer(grpcServer, &s)
+
+	if err := grpcServer.Serve(lis); err != nil {
+		log.Fatalf("failed to serve: %s", err)
+	}
 }

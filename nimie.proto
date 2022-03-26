@@ -1,0 +1,171 @@
+syntax = "proto3";
+
+package grpc_api;
+
+option go_package = "controllers/grpc_api";
+option java_package = "com.meghdut.nimie.network.grpc_api";
+
+
+// common Models for all services
+message ApiTextMessage{
+  int64 message_id = 1;
+  int64 conversation_id = 2;
+  int64 create_time = 3;
+  int64 user_id = 4;
+  string message = 5;
+  string content_type = 6;
+  bool is_seen = 7;
+}
+
+message ApiConversation{
+  int64 conversation_id = 1;
+  int64 status_id = 2;
+  int64 create_time = 3;
+  string other_public_key = 4;
+  string last_reply = 5;
+}
+
+message ApiStatus {
+  int64 status_id = 1;
+  string text = 2;
+  string link_id = 3;
+  int64 create_time = 4;
+  string public_key = 5;
+}
+
+
+
+// Request Models for the Nimie API
+
+message GetBulkStatusRequest{
+  int32 offset = 1;
+  int32 limit = 2;
+}
+
+
+message RegisterUserRequest {
+  string  pubic_key = 1;
+}
+message CreateStatusRequest {
+  string text = 1;
+  int64 user_id = 2;
+}
+
+message InitiateConversationRequest {
+  string reply = 1;
+  int64 status_id = 2;
+  int64 user_id = 3;
+}
+
+message GetConversationMessagesRequest {
+  int64 last_message_id = 1;
+  int64 conversation_id = 2;
+  int64 user_id = 3;
+}
+
+message GenericRequest {
+  string message = 1;
+}
+
+message DeleteStatusRequest {
+  int64 status_id = 1;
+  int64 user_id = 2;
+}
+
+message GetStatusRequest {
+  int64 status_id = 1;
+}
+
+message ConversationListRequest {
+  int64 user_id = 1;
+  int32 offset = 2;
+  int32 limit = 3;
+}
+
+
+message ChatClientRequest {
+  ApiTextMessage message = 1;
+  int32 message_type = 2; // messageType =  1 for text Message, 2 for Image, 3 for Typing Indicator, 4 for ping message
+}
+
+
+// Response Api Models for the Nimie API
+
+
+message ChatServerResponse {
+  int32 message_type = 1; //messageType =  1 for normal Message, 2 Typing Indicator, 3 for no more messages , 4 for pong message
+  ApiTextMessage messages = 2;
+}
+
+message GetBulkStatusResponse {
+  repeated ApiStatus bulkStatus = 1;
+}
+
+message CreateStatusResponse {
+  int64 status_id = 1;
+  int64 create_time = 2;
+  string link_id = 3;
+}
+
+message RegisterUserResponse {
+  int64 user_id = 1;
+  int64 created_at = 2;
+  string jwt = 3;
+}
+
+message InitiateConversationResponse {
+  int64 conversation_id = 1;
+  string public_key = 2;
+}
+
+
+message GetConversationMessagesResponse {
+  repeated ApiTextMessage messages = 1;
+  string status = 2;
+}
+
+message GenericResponse {
+  int64 status = 1;
+  string message = 2;
+}
+
+message GetStatusResponse {
+  int64 create_time = 1;
+  string text = 2;
+}
+
+message ConversationListResponse {
+  repeated ApiConversation conversations = 1;
+  string status = 2;
+}
+
+
+
+service NimieApi {
+  // user api
+  rpc RegisterUser(RegisterUserRequest) returns (RegisterUserResponse);
+
+  // status api
+  rpc CreateStatus(CreateStatusRequest) returns (CreateStatusResponse);
+  rpc DeleteStatus(DeleteStatusRequest) returns (GenericResponse);
+  rpc ReplyStatus(InitiateConversationRequest) returns (InitiateConversationResponse);
+  rpc GetBulkStatus(GetBulkStatusRequest) returns (GetBulkStatusResponse);
+
+  // conversation api
+  rpc GetConversationMessages(GetConversationMessagesRequest) returns (stream ChatServerResponse);
+  rpc GetConversationList(ConversationListRequest) returns (ConversationListResponse);
+
+  // chat APi
+
+  rpc chatConnect(stream ChatClientRequest) returns (stream ChatServerResponse);
+
+}
+
+
+
+// To Build the API for golang use the following cmd
+// protoc --go_out=plugins=grpc:. *.proto
+
+
+/// To build the Android API use the following cmd
+// protoc --java_out=./app/src/main/java -I ./app/src/google/protobuf/descriptor.proto
