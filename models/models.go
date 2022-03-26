@@ -86,6 +86,8 @@ func NewConversation(statusId int64, reply string, userIdB int64) (int64, string
 		Message:        reply,
 		ConversationId: conversation.ConversationId,
 		UserId:         userIdB,
+		IsSeen:         false,
+		MessageType:    "text",
 	}
 	AddMessage(&chatMessage)
 	return conversation.ConversationId, userA.PublicKey, nil
@@ -168,7 +170,7 @@ func GetMessages(messageId int64, conversationId int64) ([]ChatMessage, error) {
 		return []ChatMessage{}, utils.NewError("Conversation not found")
 	}
 	var messages []ChatMessage
-	db.Where("conversation_id = ? and message_id < ?", conversationId, messageId).Limit(25).Find(&messages)
+	db.Where("conversation_id = ? and message_id > ?", conversationId, messageId).Find(&messages)
 	return messages, nil
 }
 

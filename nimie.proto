@@ -59,6 +59,7 @@ message InitiateConversationRequest {
 message GetConversationMessagesRequest {
   int64 last_message_id = 1;
   int64 conversation_id = 2;
+  int64 user_id = 3;
 }
 
 message GenericRequest {
@@ -150,7 +151,7 @@ service NimieApi {
   rpc GetBulkStatus(GetBulkStatusRequest) returns (GetBulkStatusResponse);
 
   // conversation api
-  rpc GetConversationMessages(GetConversationMessagesRequest) returns (GetConversationMessagesResponse);
+  rpc GetConversationMessages(GetConversationMessagesRequest) returns (stream ChatServerResponse);
   rpc GetConversationList(ConversationListRequest) returns (ConversationListResponse);
 
   // chat APi

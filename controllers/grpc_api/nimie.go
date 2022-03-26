@@ -238,11 +238,46 @@ func (*NimieApiServerImpl) ChatConnect(stream NimieApi_ChatConnectServer) error 
 	return nil
 }
 
-func (*NimieApiServerImpl) GetConversationMessages(context.Context, *GetConversationMessagesRequest) (*GetConversationMessagesResponse, error) {
+func (*NimieApiServerImpl) GetConversationMessages(request *GetConversationMessagesRequest, stream NimieApi_GetConversationMessagesServer) error {
 
-	return nil, status.Errorf(codes.Unimplemented, "method GetConversationMessages not implemented")
+	messages, err := models.GetMessages(request.LastMessageId, request.ConversationId)
+	if err != nil {
+		return err
+	}
+
+	// send the messages to the client
+	for _, message := range messages {
+
+		maskedId := int64(0)
+
+		if message.UserId != request.UserId {
+			maskedId = 1
+		} else {
+			maskedId = 0
+		}
+
+		println("Sending message to client", "message", message.MessageId, request.UserId)
+
+		err := stream.Send(&ChatServerResponse{
+			Messages: &ApiTextMessage{
+				ConversationId: message.ConversationId,
+				UserId:         maskedId,
+				Message:        message.Message,
+				ContentType:    message.MessageType,
+				IsSeen:         message.IsSeen,
+				CreateTime:     message.CreateTime,
+				MessageId:      message.MessageId,
+			},
+			MessageType: SimpleMsgType,
+		})
+		if err != nil {
+			println("Unable to send message to client", "error", err)
+		}
+	}
+	stream.Context().Done()
+	return nil
 }
 
 /*
-Look for UnimplementedNimieA piServer methods in the pb.go file
+Look for UnimplementedNimie piServer methods in the pb.go file
 */
