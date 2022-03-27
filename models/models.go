@@ -18,7 +18,7 @@ type Conversation struct {
 type User struct {
 	UserId     int64  `json:"user_id" gorm:"primaryKey;autoIncrement;notNull"`
 	CreateTime int64  `json:"create_time" gorm:"autoUpdateTime:milli"`
-	PublicKey  string `json:"public_key"`
+	PublicKey  []byte `json:"public_key"`
 }
 
 type ChatMessage struct {
@@ -26,7 +26,7 @@ type ChatMessage struct {
 	ConversationId int64  `json:"conversation_id"`
 	CreateTime     int64  `json:"create_time" gorm:"autoUpdateTime:milli"`
 	UserId         int64  `json:"user_id"`
-	Message        string `json:"message"`
+	Message        []byte `json:"message"`
 	IsSeen         bool   `json:"is_seen"`
 	MessageType    string `json:"message_type"`
 }
@@ -48,14 +48,14 @@ func init() {
 }
 
 // NewConversation Here user_id_b is the sender and user_id_a is the receiver
-func NewConversation(statusId int64, reply string, userIdB int64) (int64, string, error) {
+func NewConversation(statusId int64, reply []byte, userIdB int64) (int64, []byte, error) {
 
 	// Read status from database
 	status := Status{}
 	db.Where("status_id = ?", statusId).First(&status)
 	// check if the status is valid
 	if status.StatusId == 0 {
-		return -1, "", utils.NewError("Status not found")
+		return -1, nil, utils.NewError("Status not found")
 	}
 
 	userIdA := status.UserId
@@ -64,14 +64,14 @@ func NewConversation(statusId int64, reply string, userIdB int64) (int64, string
 	db.Where("user_id = ?", userIdA).First(&userA)
 	// check if the user is valid
 	if userA.UserId == 0 {
-		return -1, "", utils.NewError("User not found")
+		return -1, nil, utils.NewError("User not found")
 	}
 	// read userB from database
 	userB := User{}
 	db.Where("user_id = ?", userIdB).First(&userB)
 	// check if the user is valid
 	if userB.UserId == 0 {
-		return -1, "", utils.NewError("User not found")
+		return -1, nil, utils.NewError("User not found")
 	}
 
 	conversation := Conversation{
@@ -81,7 +81,7 @@ func NewConversation(statusId int64, reply string, userIdB int64) (int64, string
 	}
 	err := db.Create(&conversation).Error
 	if err != nil {
-		return -1, "", err
+		return -1, nil, err
 	}
 	chatMessage := ChatMessage{
 		Message:        reply,
@@ -107,7 +107,7 @@ func GetConversation(conversationId int64) *Conversation {
 }
 
 // AddNewUser Add user to db
-func AddNewUser(publicKey string) *User {
+func AddNewUser(publicKey []byte) *User {
 	user := &User{
 		PublicKey: publicKey,
 	}
@@ -157,7 +157,7 @@ func RemoveStatus(statusId int64, userId int64) string {
 	return "You are not allowed to delete this status"
 }
 
-func GetUserPublicKey(userId int64) string {
+func GetUserPublicKey(userId int64) []byte {
 	user := &User{}
 	db.Where("user_id = ?", userId).First(user)
 	return user.PublicKey
@@ -191,7 +191,7 @@ func GetConversations(userId int64, offset int, limit int) []Conversation {
 	return conversations
 }
 
-func GetLastMessage(conversationId int64) string {
+func GetLastMessage(conversationId int64) []byte {
 	message := &ChatMessage{}
 	db.Where("conversation_id = ?", conversationId).Order("create_time desc").First(message)
 	return message.Message

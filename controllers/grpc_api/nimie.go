@@ -19,7 +19,7 @@ const SimpleMsgType = 1
 const PingPongType = 4
 
 func (*NimieApiServerImpl) RegisterUser(_ context.Context, request *RegisterUserRequest) (*RegisterUserResponse, error) {
-	_, err := utils.PublicKeyFrom64(request.GetPubicKey())
+	_, err := utils.PublicKeyFrom(request.GetPubicKey())
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, "Public key is invalid")
 	}
@@ -29,7 +29,6 @@ func (*NimieApiServerImpl) RegisterUser(_ context.Context, request *RegisterUser
 	return &RegisterUserResponse{
 		UserId:    user.UserId,
 		CreatedAt: user.CreateTime,
-		Jwt:       "User created successfully",
 	}, nil
 }
 func (*NimieApiServerImpl) CreateStatus(_ context.Context, r *CreateStatusRequest) (*CreateStatusResponse, error) {
@@ -75,7 +74,7 @@ func (*NimieApiServerImpl) DeleteStatus(context.Context, *DeleteStatusRequest) (
 }
 func (*NimieApiServerImpl) ReplyStatus(_ context.Context, request *InitiateConversationRequest) (*InitiateConversationResponse, error) {
 
-	if request.Reply == "" {
+	if request.Reply == nil {
 		return nil, status.Error(codes.InvalidArgument, "Status text is empty")
 	}
 

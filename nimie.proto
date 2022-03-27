@@ -12,7 +12,7 @@ message ApiTextMessage{
   int64 conversation_id = 2;
   int64 create_time = 3;
   int64 user_id = 4;
-  string message = 5;
+  bytes message = 5;
   string content_type = 6;
   bool is_seen = 7;
 }
@@ -21,8 +21,8 @@ message ApiConversation{
   int64 conversation_id = 1;
   int64 status_id = 2;
   int64 create_time = 3;
-  string other_public_key = 4;
-  string last_reply = 5;
+  bytes other_public_key = 4;
+  bytes last_reply = 5;
 }
 
 message ApiStatus {
@@ -30,7 +30,7 @@ message ApiStatus {
   string text = 2;
   string link_id = 3;
   int64 create_time = 4;
-  string public_key = 5;
+  bytes public_key = 5;
 }
 
 
@@ -44,7 +44,7 @@ message GetBulkStatusRequest{
 
 
 message RegisterUserRequest {
-  string  pubic_key = 1;
+  bytes  pubic_key = 1;
 }
 message CreateStatusRequest {
   string text = 1;
@@ -52,7 +52,7 @@ message CreateStatusRequest {
 }
 
 message InitiateConversationRequest {
-  string reply = 1;
+  bytes reply = 1;
   int64 status_id = 2;
   int64 user_id = 3;
 }
@@ -63,9 +63,6 @@ message GetConversationMessagesRequest {
   int64 user_id = 3;
 }
 
-message GenericRequest {
-  string message = 1;
-}
 
 message DeleteStatusRequest {
   int64 status_id = 1;
@@ -110,12 +107,11 @@ message CreateStatusResponse {
 message RegisterUserResponse {
   int64 user_id = 1;
   int64 created_at = 2;
-  string jwt = 3;
 }
 
 message InitiateConversationResponse {
   int64 conversation_id = 1;
-  string public_key = 2;
+  bytes public_key = 2;
 }
 
 
