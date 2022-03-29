@@ -42,7 +42,6 @@ message GetBulkStatusRequest{
   int32 limit = 2;
 }
 
-
 message RegisterUserRequest {
   bytes  pubic_key = 1;
 }
@@ -85,8 +84,22 @@ message ChatClientRequest {
   int32 message_type = 2; // messageType =  1 for text Message, 2 for Image, 3 for Typing Indicator, 4 for ping message
 }
 
+message InitialKeyExchangeRequest {
+  int64 conversation_id = 1;
+  bytes aes_key = 2;
+}
+
+message FinalKeyExchangeRequest {
+  int64 conversation_id = 1;
+}
+
+
 
 // Response Api Models for the Nimie API
+
+message FinalKeyExchangeResponse {
+  bytes aes_key = 1;
+}
 
 
 message ChatServerResponse {
@@ -152,7 +165,8 @@ service NimieApi {
   rpc GetConversationList(ConversationListRequest) returns (ConversationListResponse);
 
   // chat APi
-
+  rpc InitialExchangeKey(InitialKeyExchangeRequest)  returns (GenericResponse);
+  rpc FinalExchangeKey(FinalKeyExchangeRequest)  returns (FinalKeyExchangeResponse);
   rpc chatConnect(stream ChatClientRequest) returns (stream ChatServerResponse);
 
 }

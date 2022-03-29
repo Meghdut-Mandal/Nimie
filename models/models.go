@@ -1,6 +1,7 @@
 package models
 
 import (
+	"errors"
 	"github.com/Meghdut-Mandal/Nimie/config"
 	"github.com/Meghdut-Mandal/Nimie/utils"
 	"gorm.io/gorm"
@@ -39,12 +40,54 @@ type Status struct {
 	LinkId     string `json:"link_id"`
 }
 
+type KeyExchangeRequest struct {
+	ConversationId int64  `json:"conversation_id"`
+	AESKey         []byte `json:"aes_key"`
+}
+
 var db *gorm.DB
 
 func init() {
 	config.Connect()
 	db = config.GetSqlDB()
-	db.AutoMigrate(&Conversation{}, &User{}, &ChatMessage{}, &Status{})
+	db.AutoMigrate(&Conversation{}, &User{}, &ChatMessage{}, &Status{}, &KeyExchangeRequest{})
+}
+
+// AddKeyExchangeRequest add new KeyExchangeRequest request
+func AddKeyExchangeRequest(conversationId int64, aesKey []byte) error {
+	// verify if conversation exists
+	var conversation Conversation
+	db.Where("conversation_id = ?", conversationId).First(&conversation)
+	if conversation.ConversationId == 0 {
+		return errors.New("conversation not found")
+	}
+
+	db.Create(&KeyExchangeRequest{
+		ConversationId: conversationId,
+		AESKey:         aesKey,
+	})
+	return nil
+}
+
+// GetKeyExchangeRequest Get the AES key for the key exchange request
+func GetKeyExchangeRequest(conversationId int64) ([]byte, error) {
+	var keyExchangeRequest KeyExchangeRequest
+	db.Where("conversation_id = ?", conversationId).First(&keyExchangeRequest)
+	if keyExchangeRequest.ConversationId == 0 {
+		return nil, errors.New("key exchange request not found")
+	}
+	return keyExchangeRequest.AESKey, nil
+}
+
+// DeleteKeyExchangeRequest delete the key exchange request
+func DeleteKeyExchangeRequest(conversationId int64) error {
+	var keyExchangeRequest KeyExchangeRequest
+	db.Where("conversation_id = ?", conversationId).First(&keyExchangeRequest)
+	if keyExchangeRequest.ConversationId == 0 {
+		return errors.New("key exchange request not found")
+	}
+	db.Delete(&keyExchangeRequest).Where("conversation_id = ?", conversationId)
+	return nil
 }
 
 // NewConversation Here user_id_b is the sender and user_id_a is the receiver

@@ -282,6 +282,35 @@ func (*NimieApiServerImpl) GetConversationMessages(request *GetConversationMessa
 	return nil
 }
 
+func (*NimieApiServerImpl) InitialExchangeKey(_ context.Context, request *InitialKeyExchangeRequest) (*GenericResponse, error) {
+
+	println("Initial key exchange request received")
+	err := models.AddKeyExchangeRequest(request.ConversationId, request.AesKey)
+	if err != nil {
+		return &GenericResponse{
+			Message: "Unable to add key exchange request",
+		}, nil
+	}
+
+	return &GenericResponse{
+		Message: "Conversation key exchange request saved",
+	}, nil
+}
+func (*NimieApiServerImpl) FinalExchangeKey(_ context.Context, request *FinalKeyExchangeRequest) (*FinalKeyExchangeResponse, error) {
+	println("Final key exchange request received")
+	// get the AES key from the database
+	keyExchangeRequest, err := models.GetKeyExchangeRequest(request.ConversationId)
+	if err != nil {
+		return &FinalKeyExchangeResponse{
+			AesKey: nil,
+		}, nil
+	}
+
+	return &FinalKeyExchangeResponse{
+		AesKey: keyExchangeRequest,
+	}, nil
+}
+
 /*
 Look for UnimplementedNimie piServer methods in the pb.go file
 */
