@@ -1581,7 +1581,7 @@ var file_nimie_proto_rawDesc = []byte{
 	0x6e, 0x76, 0x65, 0x72, 0x73, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x52, 0x0d, 0x63, 0x6f, 0x6e, 0x76,
 	0x65, 0x72, 0x73, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x12, 0x16, 0x0a, 0x06, 0x73, 0x74, 0x61,
 	0x74, 0x75, 0x73, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75,
-	0x73, 0x32, 0xe4, 0x06, 0x0a, 0x08, 0x4e, 0x69, 0x6d, 0x69, 0x65, 0x41, 0x70, 0x69, 0x12, 0x4d,
+	0x73, 0x32, 0xaf, 0x07, 0x0a, 0x08, 0x4e, 0x69, 0x6d, 0x69, 0x65, 0x41, 0x70, 0x69, 0x12, 0x4d,
 	0x0a, 0x0c, 0x52, 0x65, 0x67, 0x69, 0x73, 0x74, 0x65, 0x72, 0x55, 0x73, 0x65, 0x72, 0x12, 0x1d,
 	0x2e, 0x67, 0x72, 0x70, 0x63, 0x5f, 0x61, 0x70, 0x69, 0x2e, 0x52, 0x65, 0x67, 0x69, 0x73, 0x74,
 	0x65, 0x72, 0x55, 0x73, 0x65, 0x72, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x1e, 0x2e,
@@ -1635,11 +1635,16 @@ var file_nimie_proto_rawDesc = []byte{
 	0x5f, 0x61, 0x70, 0x69, 0x2e, 0x43, 0x68, 0x61, 0x74, 0x43, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0x52,
 	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x1c, 0x2e, 0x67, 0x72, 0x70, 0x63, 0x5f, 0x61, 0x70,
 	0x69, 0x2e, 0x43, 0x68, 0x61, 0x74, 0x53, 0x65, 0x72, 0x76, 0x65, 0x72, 0x52, 0x65, 0x73, 0x70,
-	0x6f, 0x6e, 0x73, 0x65, 0x28, 0x01, 0x30, 0x01, 0x42, 0x3a, 0x0a, 0x22, 0x63, 0x6f, 0x6d, 0x2e,
-	0x6d, 0x65, 0x67, 0x68, 0x64, 0x75, 0x74, 0x2e, 0x6e, 0x69, 0x6d, 0x69, 0x65, 0x2e, 0x6e, 0x65,
-	0x74, 0x77, 0x6f, 0x72, 0x6b, 0x2e, 0x67, 0x72, 0x70, 0x63, 0x5f, 0x61, 0x70, 0x69, 0x5a, 0x14,
-	0x63, 0x6f, 0x6e, 0x74, 0x72, 0x6f, 0x6c, 0x6c, 0x65, 0x72, 0x73, 0x2f, 0x67, 0x72, 0x70, 0x63,
-	0x5f, 0x61, 0x70, 0x69, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x6f, 0x6e, 0x73, 0x65, 0x28, 0x01, 0x30, 0x01, 0x12, 0x49, 0x0a, 0x0f, 0x73, 0x65, 0x6e, 0x64,
+	0x43, 0x68, 0x61, 0x74, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x12, 0x18, 0x2e, 0x67, 0x72,
+	0x70, 0x63, 0x5f, 0x61, 0x70, 0x69, 0x2e, 0x41, 0x70, 0x69, 0x54, 0x65, 0x78, 0x74, 0x4d, 0x65,
+	0x73, 0x73, 0x61, 0x67, 0x65, 0x1a, 0x1c, 0x2e, 0x67, 0x72, 0x70, 0x63, 0x5f, 0x61, 0x70, 0x69,
+	0x2e, 0x43, 0x68, 0x61, 0x74, 0x53, 0x65, 0x72, 0x76, 0x65, 0x72, 0x52, 0x65, 0x73, 0x70, 0x6f,
+	0x6e, 0x73, 0x65, 0x42, 0x3a, 0x0a, 0x22, 0x63, 0x6f, 0x6d, 0x2e, 0x6d, 0x65, 0x67, 0x68, 0x64,
+	0x75, 0x74, 0x2e, 0x6e, 0x69, 0x6d, 0x69, 0x65, 0x2e, 0x6e, 0x65, 0x74, 0x77, 0x6f, 0x72, 0x6b,
+	0x2e, 0x67, 0x72, 0x70, 0x63, 0x5f, 0x61, 0x70, 0x69, 0x5a, 0x14, 0x63, 0x6f, 0x6e, 0x74, 0x72,
+	0x6f, 0x6c, 0x6c, 0x65, 0x72, 0x73, 0x2f, 0x67, 0x72, 0x70, 0x63, 0x5f, 0x61, 0x70, 0x69, 0x62,
+	0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -1697,18 +1702,20 @@ var file_nimie_proto_depIdxs = []int32{
 	12, // 12: grpc_api.NimieApi.InitialExchangeKey:input_type -> grpc_api.InitialKeyExchangeRequest
 	13, // 13: grpc_api.NimieApi.FinalExchangeKey:input_type -> grpc_api.FinalKeyExchangeRequest
 	11, // 14: grpc_api.NimieApi.chatConnect:input_type -> grpc_api.ChatClientRequest
-	18, // 15: grpc_api.NimieApi.RegisterUser:output_type -> grpc_api.RegisterUserResponse
-	17, // 16: grpc_api.NimieApi.CreateStatus:output_type -> grpc_api.CreateStatusResponse
-	21, // 17: grpc_api.NimieApi.DeleteStatus:output_type -> grpc_api.GenericResponse
-	19, // 18: grpc_api.NimieApi.ReplyStatus:output_type -> grpc_api.InitiateConversationResponse
-	16, // 19: grpc_api.NimieApi.GetBulkStatus:output_type -> grpc_api.GetBulkStatusResponse
-	15, // 20: grpc_api.NimieApi.GetConversationMessages:output_type -> grpc_api.ChatServerResponse
-	23, // 21: grpc_api.NimieApi.GetConversationList:output_type -> grpc_api.ConversationListResponse
-	21, // 22: grpc_api.NimieApi.InitialExchangeKey:output_type -> grpc_api.GenericResponse
-	14, // 23: grpc_api.NimieApi.FinalExchangeKey:output_type -> grpc_api.FinalKeyExchangeResponse
-	15, // 24: grpc_api.NimieApi.chatConnect:output_type -> grpc_api.ChatServerResponse
-	15, // [15:25] is the sub-list for method output_type
-	5,  // [5:15] is the sub-list for method input_type
+	0,  // 15: grpc_api.NimieApi.sendChatMessage:input_type -> grpc_api.ApiTextMessage
+	18, // 16: grpc_api.NimieApi.RegisterUser:output_type -> grpc_api.RegisterUserResponse
+	17, // 17: grpc_api.NimieApi.CreateStatus:output_type -> grpc_api.CreateStatusResponse
+	21, // 18: grpc_api.NimieApi.DeleteStatus:output_type -> grpc_api.GenericResponse
+	19, // 19: grpc_api.NimieApi.ReplyStatus:output_type -> grpc_api.InitiateConversationResponse
+	16, // 20: grpc_api.NimieApi.GetBulkStatus:output_type -> grpc_api.GetBulkStatusResponse
+	15, // 21: grpc_api.NimieApi.GetConversationMessages:output_type -> grpc_api.ChatServerResponse
+	23, // 22: grpc_api.NimieApi.GetConversationList:output_type -> grpc_api.ConversationListResponse
+	21, // 23: grpc_api.NimieApi.InitialExchangeKey:output_type -> grpc_api.GenericResponse
+	14, // 24: grpc_api.NimieApi.FinalExchangeKey:output_type -> grpc_api.FinalKeyExchangeResponse
+	15, // 25: grpc_api.NimieApi.chatConnect:output_type -> grpc_api.ChatServerResponse
+	15, // 26: grpc_api.NimieApi.sendChatMessage:output_type -> grpc_api.ChatServerResponse
+	16, // [16:27] is the sub-list for method output_type
+	5,  // [5:16] is the sub-list for method input_type
 	5,  // [5:5] is the sub-list for extension type_name
 	5,  // [5:5] is the sub-list for extension extendee
 	0,  // [0:5] is the sub-list for field type_name
@@ -2055,6 +2062,7 @@ type NimieApiClient interface {
 	InitialExchangeKey(ctx context.Context, in *InitialKeyExchangeRequest, opts ...grpc.CallOption) (*GenericResponse, error)
 	FinalExchangeKey(ctx context.Context, in *FinalKeyExchangeRequest, opts ...grpc.CallOption) (*FinalKeyExchangeResponse, error)
 	ChatConnect(ctx context.Context, opts ...grpc.CallOption) (NimieApi_ChatConnectClient, error)
+	SendChatMessage(ctx context.Context, in *ApiTextMessage, opts ...grpc.CallOption) (*ChatServerResponse, error)
 }
 
 type nimieApiClient struct {
@@ -2200,6 +2208,15 @@ func (x *nimieApiChatConnectClient) Recv() (*ChatServerResponse, error) {
 	return m, nil
 }
 
+func (c *nimieApiClient) SendChatMessage(ctx context.Context, in *ApiTextMessage, opts ...grpc.CallOption) (*ChatServerResponse, error) {
+	out := new(ChatServerResponse)
+	err := c.cc.Invoke(ctx, "/grpc_api.NimieApi/sendChatMessage", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // NimieApiServer is the server API for NimieApi service.
 type NimieApiServer interface {
 	// user api
@@ -2216,6 +2233,7 @@ type NimieApiServer interface {
 	InitialExchangeKey(context.Context, *InitialKeyExchangeRequest) (*GenericResponse, error)
 	FinalExchangeKey(context.Context, *FinalKeyExchangeRequest) (*FinalKeyExchangeResponse, error)
 	ChatConnect(NimieApi_ChatConnectServer) error
+	SendChatMessage(context.Context, *ApiTextMessage) (*ChatServerResponse, error)
 }
 
 // UnimplementedNimieApiServer can be embedded to have forward compatible implementations.
@@ -2251,6 +2269,9 @@ func (*UnimplementedNimieApiServer) FinalExchangeKey(context.Context, *FinalKeyE
 }
 func (*UnimplementedNimieApiServer) ChatConnect(NimieApi_ChatConnectServer) error {
 	return status.Errorf(codes.Unimplemented, "method ChatConnect not implemented")
+}
+func (*UnimplementedNimieApiServer) SendChatMessage(context.Context, *ApiTextMessage) (*ChatServerResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SendChatMessage not implemented")
 }
 
 func RegisterNimieApiServer(s *grpc.Server, srv NimieApiServer) {
@@ -2448,6 +2469,24 @@ func (x *nimieApiChatConnectServer) Recv() (*ChatClientRequest, error) {
 	return m, nil
 }
 
+func _NimieApi_SendChatMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ApiTextMessage)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(NimieApiServer).SendChatMessage(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/grpc_api.NimieApi/SendChatMessage",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(NimieApiServer).SendChatMessage(ctx, req.(*ApiTextMessage))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _NimieApi_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "grpc_api.NimieApi",
 	HandlerType: (*NimieApiServer)(nil),
@@ -2483,6 +2522,10 @@ var _NimieApi_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "FinalExchangeKey",
 			Handler:    _NimieApi_FinalExchangeKey_Handler,
+		},
+		{
+			MethodName: "sendChatMessage",
+			Handler:    _NimieApi_SendChatMessage_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{

@@ -168,6 +168,7 @@ service NimieApi {
   rpc InitialExchangeKey(InitialKeyExchangeRequest)  returns (GenericResponse);
   rpc FinalExchangeKey(FinalKeyExchangeRequest)  returns (FinalKeyExchangeResponse);
   rpc chatConnect(stream ChatClientRequest) returns (stream ChatServerResponse);
+  rpc sendChatMessage(ApiTextMessage) returns (ChatServerResponse);
 
 }
 

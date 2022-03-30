@@ -16,6 +16,7 @@ var chatClientConnections = make(map[int64]*NimieApi_ChatConnectServer)
 var conversationCache = make(map[int64]*models.Conversation)
 
 const SimpleMsgType = 1
+const ImageMsgType = 2
 const PingPongType = 4
 
 func (*NimieApiServerImpl) RegisterUser(_ context.Context, request *RegisterUserRequest) (*RegisterUserResponse, error) {
@@ -149,14 +150,7 @@ func (*NimieApiServerImpl) ChatConnect(stream NimieApi_ChatConnectServer) error 
 		println("Client connected with", "conversationId", msg.ConversationId)
 		println("Client id is ", "clientId", userId)
 
-		// find the conversation from the cache
-		if conversationCache[msg.ConversationId] == nil {
-			println("Conversation not found in cache, fetching from database")
-			conversationCache[msg.ConversationId] = models.GetConversation(msg.ConversationId)
-			println("Conversation fetched from database and added to cache ", conversationCache[msg.ConversationId])
-		}
-
-		conversation := conversationCache[msg.ConversationId]
+		conversation := getConversation(msg.ConversationId)
 
 		// find the other user's id
 		otherUserId := int64(0)
@@ -181,44 +175,12 @@ func (*NimieApiServerImpl) ChatConnect(stream NimieApi_ChatConnectServer) error 
 			}
 			savedMessage := models.AddMessage(&dbMessage)
 
-			go func() {
-				err := stream.Send(&ChatServerResponse{
-					Messages: &ApiTextMessage{
-						ConversationId: savedMessage.ConversationId,
-						UserId:         0,
-						Message:        savedMessage.Message,
-						ContentType:    savedMessage.MessageType,
-						IsSeen:         savedMessage.IsSeen,
-						CreateTime:     savedMessage.CreateTime,
-						MessageId:      savedMessage.MessageId,
-					},
-					MessageType: 1,
-				})
-				if err != nil {
-					println("Unable to send message to client", "error", err)
-				}
-			}()
+			go sendMessageToConnection(0, &stream, savedMessage, true)
 
 			// send the message to the other user
 			if otherClientConnection != nil {
 				println("Sending message to other user with id ", otherUserId)
-				go func() {
-					err := (*otherClientConnection).Send(&ChatServerResponse{
-						Messages: &ApiTextMessage{
-							ConversationId: savedMessage.ConversationId,
-							UserId:         1,
-							Message:        savedMessage.Message,
-							ContentType:    savedMessage.MessageType,
-							IsSeen:         savedMessage.IsSeen,
-							CreateTime:     savedMessage.CreateTime,
-							MessageId:      savedMessage.MessageId,
-						},
-						MessageType: SimpleMsgType,
-					})
-					if err != nil {
-						println("Unable to send message to client", "error", err)
-					}
-				}()
+				go sendMessageToConnection(1, otherClientConnection, savedMessage, true)
 			}
 		} else if rr.MessageType == PingPongType {
 			// send a pong message to the current user
@@ -240,6 +202,42 @@ func (*NimieApiServerImpl) ChatConnect(stream NimieApi_ChatConnectServer) error 
 
 	chatClientConnections[userId] = nil
 	return nil
+}
+
+func getConversation(conversationId int64) *models.Conversation {
+	// find the conversation from the cache
+	if conversationCache[conversationId] == nil {
+		println("Conversation not found in cache, fetching from database")
+		conversationCache[conversationId] = models.GetConversation(conversationId)
+		println("Conversation fetched from database and added to cache ", conversationCache[conversationId])
+	}
+
+	conversation := conversationCache[conversationId]
+	return conversation
+}
+
+func sendMessageToConnection(userId int64, otherClientConnection *NimieApi_ChatConnectServer, savedMessage models.ChatMessage, sendContent bool) {
+
+	content := savedMessage.Message
+	if !sendContent { // Sometimes the Message content is not sent to the client
+		content = nil
+	}
+
+	err := (*otherClientConnection).Send(&ChatServerResponse{
+		Messages: &ApiTextMessage{
+			ConversationId: savedMessage.ConversationId,
+			UserId:         userId,
+			Message:        content,
+			ContentType:    savedMessage.MessageType,
+			IsSeen:         savedMessage.IsSeen,
+			CreateTime:     savedMessage.CreateTime,
+			MessageId:      savedMessage.MessageId,
+		},
+		MessageType: SimpleMsgType,
+	})
+	if err != nil {
+		println("Unable to send message to client", "error", err)
+	}
 }
 
 func (*NimieApiServerImpl) GetConversationMessages(request *GetConversationMessagesRequest, stream NimieApi_GetConversationMessagesServer) error {
@@ -308,6 +306,52 @@ func (*NimieApiServerImpl) FinalExchangeKey(_ context.Context, request *FinalKey
 
 	return &FinalKeyExchangeResponse{
 		AesKey: keyExchangeRequest,
+	}, nil
+}
+
+func (*NimieApiServerImpl) SendChatMessage(_ context.Context, msg *ApiTextMessage) (*ChatServerResponse, error) {
+
+	dbMessage := models.ChatMessage{
+		ConversationId: msg.ConversationId,
+		UserId:         msg.UserId,
+		Message:        msg.Message,
+		MessageType:    msg.ContentType,
+		IsSeen:         false,
+	}
+
+	savedMessage := models.AddMessage(&dbMessage)
+
+	//get the conversation
+	conversation := getConversation(msg.ConversationId)
+
+	// get the other user id
+	otherUserId := int64(0)
+	if msg.UserId == conversation.UserIdA {
+		otherUserId = conversation.UserIdB
+	} else {
+		otherUserId = conversation.UserIdA
+	}
+
+	// get the other user connection
+	otherClientConnection := chatClientConnections[otherUserId]
+
+	// send the message to the other user
+	if otherClientConnection != nil {
+		println("Sending message to client", savedMessage.MessageId, "   userid = ", otherUserId)
+		go sendMessageToConnection(1, otherClientConnection, savedMessage, true)
+	}
+
+	return &ChatServerResponse{
+		Messages: &ApiTextMessage{
+			ConversationId: savedMessage.ConversationId,
+			UserId:         savedMessage.UserId,
+			Message:        nil, // FOR PERFORMANCE REASONS WE ARE NOT SENDING THE MESSAGE BACK TO THE CLIENT
+			ContentType:    savedMessage.MessageType,
+			IsSeen:         savedMessage.IsSeen,
+			CreateTime:     savedMessage.CreateTime,
+			MessageId:      savedMessage.MessageId,
+		},
+		MessageType: SimpleMsgType,
 	}, nil
 }
 
